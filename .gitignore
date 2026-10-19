@@ -1,0 +1,5 @@
+# Public repo: allowlist only. Contact data (CSVs, Excel, Logs) must never be committed.
+*
+!.gitignore
+!README.md
+!spike.sh
