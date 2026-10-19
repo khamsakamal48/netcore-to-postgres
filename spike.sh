@@ -23,6 +23,11 @@ call() {  # name, curl args...
   head -c 400 "$OUT/$name.json"; echo; echo
 }
 
+# V5 gateway (latest docs). Read-only contact search: tells us if the key works on v5 even when v4/apiv2 reject it.
+case "$REGION" in ind) V5=https://netcoreapi-main-prod-ind.netcorein.com/v5 ;; eu) V5=https://netcoreapi-main-prod-eu.netcorein.com/v5 ;; *) V5=https://netcoreapi-main-prod-us.netcorein.com/v5 ;; esac
+call v5_contact_search -X POST "$V5/contact/search" -H "api-key: $NETCORE_API_KEY" -H 'Content-Type: application/json' \
+  -d '{"filtering_criteria_operator":"or","filtering_criteria":[{"condition_operator":"and","condition_details":[{"field":"contact_type","field_category":"config","operation":"equals","value":["identified"]}]}],"output":{"get_count":true,"pagination":{"page":1,"limit":2},"fields":["EMAIL"]}}'
+
 call campaign_list -X POST "$V4/v4/campaign/list" -H "api-key: $NETCORE_API_KEY" -H 'Content-Type: application/json' \
   -d '{"channel":["email"],"page_no":1,"page_size":50,"campaign_states":["sent"]}'
 
